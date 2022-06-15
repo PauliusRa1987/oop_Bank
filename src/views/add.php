@@ -11,7 +11,7 @@ require __DIR__ . '/top.php';
     <form action="" method="post" class="new add">
         <span>Vardas: <span class="value"></span><?= $users['name']?></span>
         <span>Pavarde: <span class="value"></span><?= $users['surname']?></span>
-        <span>Sąskaitos likutis: <span class="value"></span><?= $users['suma']?></span>
+        <span>Sąskaitos likutis USD: <span class="value"></span><?= $users['suma']?></span>
         <span>Pridedama suma: <input type="number" name="add" required></span>
         <button class="btn">ADD $$$</button>
     </form>

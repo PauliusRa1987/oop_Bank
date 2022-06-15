@@ -9,14 +9,21 @@ use Bankas\Messages;
 
 class App{
     const DOMAN = 'bankas.lt';
+    private static $html;
     
     public static function start(){
         session_start();
         Messages::init();
+        ob_start();
         $uri = explode('/', $_SERVER['REQUEST_URI']);
         array_shift($uri);
         self::router($uri);
-
+        self::$html = ob_get_contents();
+        ob_end_clean();
+    }
+    
+    public static function sent(){
+        echo self::$html;
     }
     private static function router(array $uri){
         
@@ -28,6 +35,7 @@ class App{
             
             return (new AccountController())->list();
         }
+        
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && count($uri) == 1 && $uri[0] === 'create') {
             return (new CreateController())->toCreatePage();
         }
@@ -71,6 +79,9 @@ class App{
     }
     public static function redirect(string $name){
         header('Location: http://'.self::DOMAN.'/'.$name);
+    }
+    public static function csrf() {
+        return md5('jsaofdis6f64sdfsdk\fbs68sdf'. $_SERVER['HTTP_USER_AGENT']);
     }
 
 }

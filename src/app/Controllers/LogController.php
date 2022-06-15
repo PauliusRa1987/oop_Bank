@@ -14,11 +14,14 @@ class LogController{
 
     public function showLogin()
     {
-        return App::view('login', ['messages' => M::get(), 'title' => 'Bankas']);
+        return App::view('login', ['messages' => M::get(), 'title' => 'Bankas', 'csrf' => App::csrf()]);
     }
     public function login()
     {
-        
+        if(($_POST['csrf'] ?? '') != App::csrf()) {
+            M::add('Blogas kodas', 'alert');
+            return App::redirect('login');
+        }
         $user = $_POST['username'] ?? ''; 
         $pass = md5($_POST['password']) ?? '';
         $password = $this->showUs()['password'];
@@ -41,4 +44,5 @@ class LogController{
     {
         return isset($_SESSION['login']) && $_SESSION['login'] == 1;
     }
+   
 }

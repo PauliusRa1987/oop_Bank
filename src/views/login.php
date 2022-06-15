@@ -22,6 +22,7 @@
         <form style="background-color: #7F99A1; padding: 10px" action="" method="post" class="new" name="singin">
             Username: <input type="text" name="username" pattern="[a-zA-Z0-9]+" required />
             Password: <input type="password" name="password" required />
+            <input type="hidden" name="csrf" value="<?= $csrf ?>">
             <button type="submit" value="login" name="login" class="btn">Login</button>
         </form>
         <?php

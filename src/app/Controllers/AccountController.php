@@ -1,6 +1,7 @@
 <?php
 namespace Bankas\Controllers;
 use Bankas\App;
+use Bankas\Converter;
 use Bankas\Safe;
 use Bankas\Messages as M;
 class AccountController{
@@ -11,11 +12,11 @@ class AccountController{
           App::redirect('login');
       }
   }
-    public function list(){
-
+    public function list(){    
+      
         $users = Safe::get()->showAll();
         $link = 'http://'.App::DOMAN.'/';
-        return App::view('accounts', ['title' => 'Bankas', 'users' => $users, 'link' => $link, 'messages' => M::get()]);
+        return App::view('accounts', ['title' => 'Bankas', 'users' => $users, 'eur' =>  Converter::convert(),'link' => $link, 'messages' => M::get()]);
     }
     public function add(string $id){
         $user = Safe::get()->show($id);

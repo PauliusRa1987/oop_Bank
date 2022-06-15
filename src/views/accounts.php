@@ -5,6 +5,7 @@ require __DIR__ . '/top.php';
     <h3>Sąskaitų sąrašas</h3>
     <?php
     require __DIR__ . '/msg.php';
+    
     ?>
     <ul>
         <?php foreach ($users as $key => $user) : ?>   
@@ -13,7 +14,8 @@ require __DIR__ . '/top.php';
                 <span>Vardas: <span class="value"></span><?= $user['name'] ?></span>
                 <span>Pavarde: <span class="value"></span><?= $user['surname'] ?></span>
                 <span>Asmens id: <span class="value"></span><?= $user['personId'] ?></span>
-                <span>Turimos lėšos: <span class="value"></span><?= $user['suma'] ?></span>
+                <span>Turimos lėšos USD: <span class="value"></span><?= $user['suma'] ?></span>
+                <span>Turimos lėšos EUR: <span class="value"></span><?= $user['suma'] * $eur ?></span>
             
                 <div class="action2">
                 <form action="<?= $link.'delete/'.$user['client']?>" method="post">
