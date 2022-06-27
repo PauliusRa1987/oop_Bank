@@ -37,7 +37,7 @@ class App
 
         if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
             header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS');
+            header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS');
             header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
             die;
         }
@@ -85,28 +85,18 @@ class App
         }
 
         //React routs 
-        // if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
-        //     // header('Content-Type: application/json');
-        // header('Access-Control-Allow-Origin: *');
-        // header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT, OPTIONS');
-        // header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
-        //     die;
-        // }
-        header('Content-Type: application/json; charset=utf-8');
-        header('Content-Type: application/json');
-        header('Access-Control-Allow-Origin: *');
-        header('Access-Control-Allow-Methods: GET, POST, DELETE, PUT');
-        header("Access-Control-Allow-Headers: Authorization, Content-Type, X-Requested-With");
+       
+
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && count($uri) == 1 && $uri[0] === 'loginAuth') {
 
 
             if (App::getUser()) {
-                echo json_encode(['user' => 'ok']);
+                return self::json(['user' => 'ok']);
             } else {
                 $msg = 'Klaidingi prisijungimo duomenys';
                 $style = 'bad';
-                echo json_encode(['msg' => $msg, 'style' => $style]);
+                return self::json(['msg' => $msg, 'style' => $style]);
             }
         }
 
@@ -122,10 +112,10 @@ class App
                 $token = md5(time() . rand(0, 10000));
                 $users['session'] = $token;
                 file_put_contents(__DIR__ . '/server/worker.json', json_encode($users));
-                echo json_encode(['token' => $token]);
+                return self::json(['token' => $token]);
                 die;
             }
-            echo json_encode(['msg' => 'error']);
+            return self::json(['msg' => 'error']);
         }
 
         if (App::getUser()) {
@@ -176,7 +166,6 @@ class App
     //function for react
     public static function json(array $data = [])
     {
-        header('Content-Type: application/json; charset=utf-8');
         header('Content-Type: application/json');
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: OPTIONS,GET, POST, DELETE, PUT');
