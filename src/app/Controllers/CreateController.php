@@ -11,15 +11,12 @@ use Bankas\Validations as V;
 
 class CreateController
 {
-    public function __construct()
-  {
-      if (!LogController::isLogged()) {
-          App::redirect('login');
-      }
-  }
+
     public function toCreatePage()
     {
-
+        if (!LogController::isLogged()) {
+                      App::redirect('login');
+                  }
         $id = Safe::clientId();
         $iban = CreateController::acountNr();
         return App::view('create', ['title' => 'Bankas', 'id' => $id, 'iban' => $iban, 'messages' => M::get()]);
@@ -42,6 +39,9 @@ class CreateController
     
     public function keep()
     {
+        if (!LogController::isLogged()) {
+            App::redirect('login');
+        }
         if(
             !empty($_POST)
             && V::nameValid($_POST['name'])
@@ -61,5 +61,33 @@ class CreateController
         }
         
         return App::redirect('create');   
+    }
+
+
+    public function keepJson($data)
+    {
+        
+        if(
+            !empty($data)
+            && V::nameValid($data['name'])
+            && V::nameValid($data['surname'])
+            && V::idValid($data['personId'])
+        ){ 
+        $acount = [];
+        $acount = ['client' => Safe::clientId(),
+        'sasNr' => CreateController::acountNr(), 
+        'name' => ($data['name'] ?? 0), 
+        'surname' => ($data['surname'] ?? 0), 
+        'personId' => ($data['personId'] ?? 0), 
+        'suma' => 0];
+        Safe::get()->create($acount);
+        
+        $msg ='Naujas vartotojas pridėtas į sistemą';
+        $style = 'good';
+        return App::json(['msg'=> $msg, 'style' => $style]);
+        }
+        $msg = 'Neteisingai įvesti duomenys arba toks vartotojas jau egzistuoja';
+        $style = 'bad';
+        return App::json(['msg'=> $msg, 'style' => $style]); 
     }
 }
