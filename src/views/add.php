@@ -5,7 +5,7 @@ require __DIR__ . '/top.php';
 <main class="main saskaitos">
     <h3>Pridėti lėšas</h3>
     <?php
-    require __DIR__ . '/msg.php';
+
     ?>
 
     <form action="" method="post" class="new add">

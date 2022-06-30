@@ -9,7 +9,7 @@ class Safe implements DataBase{
 
     public static function get()
     {
-        return self::$file ?? new self;
+        return self::$file ?? self::$file = new self;
     }
     public function __construct()
    {
@@ -68,5 +68,6 @@ class Safe implements DataBase{
             }
         }
     }
+    
     
 }

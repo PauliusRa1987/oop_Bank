@@ -17,7 +17,7 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $users = Safe::get()->showAll();
+    $users = App::$db->showAll();
     $link = 'http://' . App::DOMAN . '/';
     return App::view('accounts', ['title' => 'Bankas', 'users' => $users, 'eur' =>  Converter::convert(), 'link' => $link, 'messages' => M::get()]);
   }
@@ -27,7 +27,7 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $user = Safe::get()->show($id);
+    $user = App::$db->show($id);
     return App::view('add', ['title' => 'Bankas', 'users' => $user, 'messages' => M::get()]);
   }
   public function addMoney(string $id)
@@ -35,10 +35,10 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if ($duomenys['client'] == $id && $_POST['add'] > 0) {
       $duomenys['suma'] += $_POST['add'];
-      Safe::get()->update($id, $duomenys);
+      App::$db->update($id, $duomenys);
       M::add('Pinigai pridėti', 'success');
       return App::redirect('accounts');
     }
@@ -52,7 +52,7 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $user = Safe::get()->show($id);
+    $user = App::$db->show($id);
     return App::view('remove', ['title' => 'Bankas', 'users' => $user, 'messages' => M::get()]);
   }
 
@@ -61,15 +61,16 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if (
       $duomenys['client'] == $id
       && $duomenys['suma'] >= $_POST['remove']
       && $_POST['remove'] >= 0
     ) {
       $duomenys['suma'] -= $_POST['remove'];
-      Safe::get()->update($id, $duomenys);
+      App::$db->update($id, $duomenys);
       M::add('Pinigai nuskaičiuoti', 'success');
+
       return App::redirect('accounts');
     }
 
@@ -83,9 +84,9 @@ class AccountController
     if (!LogController::isLogged()) {
       App::redirect('login');
   }
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if ($duomenys['client'] == $id && $duomenys['suma'] == 0) {
-      Safe::get()->delete($id);
+      App::$db->delete($id);
       M::add('Vartotojas pašalintas iš sistemos', 'success');
       return App::redirect('accounts');
     }
@@ -93,12 +94,12 @@ class AccountController
     return App::redirect('accounts');
   }
 
-  // methodes for React
+  // // methodes for React
 
   public function acountJson()
   {
 
-    $users = Safe::get()->showAll();
+    $users = App::$db->showAll();
     // $link = 'http://'.App::DOMAN.'/';
     return App::json($users);
   }
@@ -106,10 +107,10 @@ class AccountController
 
   public function addIn(string $id, array $data)
   {
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if ($duomenys['client'] == $id && $data['newSuma'] > 0) {
       $duomenys['suma'] += $data['newSuma'];
-      Safe::get()->update($id, $duomenys);
+      App::$db->update($id, $duomenys);
       $msg ='Pinigai pridėti';
       $style = 'good';
       return App::json(['msg'=> $msg, 'style' => $style]); 
@@ -122,14 +123,14 @@ class AccountController
   
   public function out(string $id, array $data)
   {
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if (
       $duomenys['client'] == $id
       && $duomenys['suma'] >= $data['newSuma']
       && $data['newSuma'] >= 0
     ) {
       $duomenys['suma'] -= $data['newSuma'];
-      Safe::get()->update($id, $duomenys);
+      App::$db->update($id, $duomenys);
       $msg ='Pinigai nuskaičiuoti';
       $style = 'good';
       return App::json(['msg'=> $msg, 'style' => $style]); 
@@ -141,9 +142,9 @@ class AccountController
 
   public function deleteAcc(string $id)
   {
-    $duomenys = Safe::get()->show($id);
+    $duomenys = App::$db->show($id);
     if ($duomenys['client'] == $id && $duomenys['suma'] == 0) {
-      Safe::get()->delete($id);
+      App::$db->delete($id);
       $msg ='Vartotojas pašalintas iš sistemos';
       $style = 'good';
       return App::json(['msg'=> $msg, 'style' => $style]); 

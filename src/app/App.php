@@ -14,7 +14,7 @@ class App
 {
     const DOMAN = 'bankas.lt';
     private static $html;
-
+    public static $db;
     public static function start()
     {
         session_start();
@@ -22,6 +22,8 @@ class App
         ob_start();
         $uri = explode('/', $_SERVER['REQUEST_URI']);
         array_shift($uri);
+        self::$db = new MariaDb();
+        // self::$db = new Safe();
         self::router($uri);
         self::$html = ob_get_contents();
         ob_end_clean();
@@ -84,7 +86,7 @@ class App
             return (new LogController())->login();
         }
 
-        //React routs 
+    //     //React routs 
        
 
 

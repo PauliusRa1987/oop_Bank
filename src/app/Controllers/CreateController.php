@@ -49,13 +49,14 @@ class CreateController
             && V::idValid($_POST['personId'])
         ){ 
         $acount = [];
-        $acount = ['client' => ($_POST['client'] ?? 0),
+        $acount = [
+        // 'client' => ($_POST['client'] ?? 0),
         'sasNr' => ($_POST['code'] ?? 0), 
         'name' => ($_POST['name'] ?? 0), 
         'surname' => ($_POST['surname'] ?? 0), 
         'personId' => ($_POST['personId'] ?? 0), 
         'suma' => 0];
-        Safe::get()->create($acount);
+        App::$db->create($acount);
         M::add('Naujas vartotojas pridėtas į sistemą', 'success');
         return App::redirect('accounts');
         }
@@ -80,7 +81,7 @@ class CreateController
         'surname' => ($data['surname'] ?? 0), 
         'personId' => ($data['personId'] ?? 0), 
         'suma' => 0];
-        Safe::get()->create($acount);
+        App::$db->create($acount);
         
         $msg ='Naujas vartotojas pridėtas į sistemą';
         $style = 'good';

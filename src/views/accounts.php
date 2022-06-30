@@ -5,7 +5,7 @@ require __DIR__ . '/top.php';
     <h3>Sąskaitų sąrašas</h3>
     <?php
     require __DIR__ . '/msg.php';
-    
+
     ?>
     <ul>
         <?php foreach ($users as $key => $user) : ?>   
