@@ -85,4 +85,43 @@ class MariaDb implements DataBase
     $stmt = $this->pdo->prepare($sql);
     $stmt->execute([$data['suma'], $id]);
     }
+    
+    //// Log and Sign methodes
+    public function createUser(array $data): void
+    {
+        $this->data[] = $data;
+        $sql = "
+        INSERT INTO signin
+        (username, password)
+        VALUES (?, ?)
+        ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$data['username'], $data['password']]);
+    }
+
+    public function showUs(): array
+    {
+        $sql = "
+        SELECT *
+        FROM signin
+        ";
+       
+        $stmt = $this->pdo->query($sql);
+        $this->data = $stmt->fetchAll();
+
+        return $this->data;
+    }
+    function updateUser(int $id, array $data) : void {
+        
+        $sql = "
+        UPDATE signin
+            SET session = ?
+            WHERE id = ?
+    ";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute([$data['session'], $data['id']]);
+    }
+
+
+
 }

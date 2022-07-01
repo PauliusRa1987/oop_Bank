@@ -68,6 +68,9 @@ class Safe implements DataBase{
             }
         }
     }
-    
+    public function showUs(){
+        $this->data = json_decode(file_get_contents(__DIR__.'/server/worker.json'), 1);
+        return $this->data;
+    }
     
 }

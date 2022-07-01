@@ -11,7 +11,7 @@
     <header class="header">
     <img class="img" src="../images/logo.png" alt="bank logo">
     <nav class="links">
-            <a href="http://bankas.lt/signin">SIGN UP</a>
+            <a href="http://bankas.lt/login">LOGIN</a>
         </nav>
     </header>
     <main class="main">
@@ -20,13 +20,14 @@
     require __DIR__ . '/msg.php';
     ?></h4>
         
-        <h2 style="margin-left: 200px; " >Please LOGIN or <a style="text-decoration: none" href="http://bankas.lt/signin">SIGN UP</a>:</h2>
+        <h2 style="margin-left: 200px; " >Please Sign Up:</h2>
         
-        <form style="background-color: #7F99A1; padding: 10px" action="" method="post" class="new" name="login">
+        <form style="background-color: #7F99A1; padding: 10px" action="" method="post" class="new" name="singin">
             Username: <input type="text" name="username" pattern="[a-zA-Z0-9]+" required />
             Password: <input type="password" name="password" required />
+            Repeat Password: <input type="password" name="pass" required />
             <input type="hidden" name="csrf" value="<?= $csrf ?>">
-            <button type="submit" value="login" name="login" class="btn">Login</button>
+            <button type="submit" value="signin" name="signin" class="btn">Sign Up</button>
         </form>
         <?php
     require __DIR__ . '/bottom.php';

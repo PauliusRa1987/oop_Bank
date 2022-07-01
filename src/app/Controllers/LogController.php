@@ -7,11 +7,6 @@ use Bankas\Messages as M;
 class LogController{
     public $data;
 
-    public function showUs(){
-        $this->data = json_decode(file_get_contents(__DIR__.'/../server/worker.json'), 1);
-        return $this->data;
-    }
-
     public function showLogin()
     {
         return App::view('login', ['messages' => M::get(), 'title' => 'Bankas', 'csrf' => App::csrf()]);
@@ -22,17 +17,21 @@ class LogController{
             M::add('Blogas kodas', 'alert');
             return App::redirect('login');
         }
+        if(!empty($_POST['username']) && !empty($_POST['password'])){ 
         $user = $_POST['username'] ?? ''; 
         $pass = md5($_POST['password']) ?? '';
-        $password = $this->showUs()['password'];
-        if (md5($password) == $pass && $user == $this->showUs()['username']) {
+        $data = App::$db->showUs();
+        foreach ($data as $us) {
+        if ( $user == $us['username'] && $pass == $us['password']) {
             $_SESSION['login'] = 1;
             $_SESSION['username'] = $user;
-            App::redirect('');
-        }else{
+            App::redirect('');}
+        }
+        }else{ 
             M::add('Klaidingi duomenys!', 'alert');
             App::redirect('login');
         }
+    
     }
     public function logout()
     {

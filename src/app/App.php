@@ -6,6 +6,7 @@ use Bankas\Controllers\HomeController;
 use Bankas\Controllers\AccountController;
 use Bankas\Controllers\CreateController;
 use Bankas\Controllers\LogController;
+use Bankas\Controllers\SignController;
 use Bankas\Messages;
 
 require __DIR__ . '/Controllers/LogController.php';
@@ -85,9 +86,15 @@ class App
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($uri) == 1 && $uri[0] === 'login') {
             return (new LogController())->login();
         }
+        if ($_SERVER['REQUEST_METHOD'] == 'GET' && count($uri) == 1 && $uri[0] === 'signin') {
+            return (new SignController())->showSignin();
+        }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($uri) == 1 && $uri[0] === 'signin') {
+            return (new SignController())->createU();
+        }
 
     //     //React routs 
-       
+   
 
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET' && count($uri) == 1 && $uri[0] === 'loginAuth') {
@@ -106,17 +113,19 @@ class App
         if ($_SERVER['REQUEST_METHOD'] == 'POST' && count($uri) == 1 && $uri[0] === 'loginApp') {
             $rawData = file_get_contents("php://input");
             $data = json_decode($rawData, 1);
-            $db = new LogController;
-            $users = $db->showUs();
-
-
-            if ($users['username'] == $data['name'] && $users['password'] == $data['pass']) {
+            $users = App::$db->showUs();
+            foreach ($users as $us){
+            if ($us['username'] == $data['name'] && $us['password'] == md5($data['pass'])) {
                 $token = md5(time() . rand(0, 10000));
-                $users['session'] = $token;
-                file_put_contents(__DIR__ . '/server/worker.json', json_encode($users));
+                $us['session'] = $token;
+                App::$db->updateUser($us['id'], $us);
+                // file_put_contents(__DIR__ . '/server/worker.json', json_encode($us));
                 return self::json(['token' => $token]);
                 die;
             }
+
+            }
+
             return self::json(['msg' => 'error']);
         }
 
@@ -145,8 +154,9 @@ class App
             $rawData = file_get_contents("php://input");
             $data = json_decode($rawData, 1);
             return (new AccountController())->out($uri[1], $data);
-        } else {
-            //  echo 'pasiklydai';
+        }
+         else {
+        //     //  echo 'pasiklydai';
         }
     }
     }
@@ -180,12 +190,13 @@ class App
         if ($token === '') {
             return null;
         }
-        $db = new LogController;
-        $users = $db->showUs();
-        if ($users['session'] == $token) {
-            return $users;
+        
+        $users = App::$db->showUs();
+        foreach ($users as $us){
+        if ($us['session'] == $token) {
+            return $us;
         }
-
+        }
         return null;
     }
 }
